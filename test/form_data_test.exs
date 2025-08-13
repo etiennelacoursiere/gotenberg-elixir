@@ -2,6 +2,72 @@ defmodule GotenbergElixir.FormDataTest do
   use ExUnit.Case
   alias GotenbergElixir.FormData
 
+  describe "encode_options/1" do
+    test "encodes empty list" do
+      assert FormData.encode_options([]) == []
+    end
+
+    test "encodes single option with atom key" do
+      options = [paper_width: "8.5"]
+      result = FormData.encode_options(options)
+
+      assert result == [{"paperWidth", "8.5"}]
+    end
+
+    test "encodes single option with string key" do
+      options = [{"paper_height", 11}]
+      result = FormData.encode_options(options)
+
+      assert result == [{"paperHeight", "11"}]
+    end
+
+    test "encodes multiple options with snake_case conversion" do
+      options = [
+        page_ranges: "1-5",
+        print_background: true,
+        landscape: false,
+        margin_top: "0.5in"
+      ]
+
+      result = FormData.encode_options(options)
+
+      expected = [
+        {"marginTop", "0.5in"},
+        {"landscape", "false"},
+        {"printBackground", "true"},
+        {"pageRanges", "1-5"}
+      ]
+
+      assert length(result) == length(expected)
+      assert Enum.all?(expected, &(&1 in result))
+    end
+
+    test "converts various value types to strings" do
+      options = [
+        string_value: "test",
+        integer_value: 42,
+        float_value: 3.14,
+        boolean_true: true,
+        boolean_false: false,
+        atom_value: :some_atom
+      ]
+
+      result = FormData.encode_options(options)
+
+      expected = [
+        {"atomValue", "some_atom"},
+        {"booleanFalse", "false"},
+        {"booleanTrue", "true"},
+        {"floatValue", "3.14"},
+        {"integerValue", "42"},
+        {"stringValue", "test"}
+      ]
+
+      assert length(result) == length(expected)
+      assert Enum.all?(expected, &(&1 in result))
+    end
+  end
+
   describe "reduce_files/1" do
     test "converts single file tuple to keyword list" do
       files = [{"index.css", "body { color: red; }"}]
@@ -28,6 +94,10 @@ defmodule GotenbergElixir.FormDataTest do
       assert Keyword.get(result, :file_1) == expected[:file_1]
       assert Keyword.get(result, :file_2) == expected[:file_2]
       assert Keyword.get(result, :file_3) == expected[:file_3]
+    end
+
+    test "handles empty file list" do
+      assert FormData.reduce_files([]) == []
     end
   end
 end

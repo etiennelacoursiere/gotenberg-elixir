@@ -5,3 +5,6 @@ ifeq ($(shell docker ps -a -q -f name=gotenberg),)
 else
 	@echo -e "Gotenberg container already running"
 endif
+
+start:
+	iex -S mix
