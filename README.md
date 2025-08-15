@@ -1,19 +1,17 @@
 # GotenbergElixir
 An elixir client for interacting with Gotenberg
 
-## Installation
+> [!WARNING]
+> This is a work in progress and is not yet ready for production use.
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `gotenberg_elixir` to your list of dependencies in `mix.exs`:
+## Implemented
+- [x] health check, version
+- [x] Chromium routes
 
-```elixir
-def deps do
-  [
-    {:gotenberg_elixir, "~> 0.1.0"}
-  ]
-end
-```
+## TODO
+- [ ] LibreOffice routes
+- [ ] PDF routes
+- [ ] Metrics
+- [ ] Webhooks
+- [ ] Probably more
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/gotenberg_elixir>.
