@@ -1,7 +1,6 @@
 defmodule GotenbergElixir.Casing do
-  @moduledoc """
-  This module provides various helpers to handle casing
-  """
+  @moduledoc false
+
   @camelize_regex ~r/(?:^|[-_])|(?=[A-Z][a-z])/
 
   @doc """

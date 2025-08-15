@@ -7,8 +7,6 @@ defmodule GotenbergElixir do
 
   @doc """
   Checks the health of the Gotenberg service.
-
-  Returns `{:ok, response}` on success or `{:error, error}` on failure.
   """
   @spec health() :: {:ok, HttpClient.response()} | {:error, HttpClient.error()}
   def health do

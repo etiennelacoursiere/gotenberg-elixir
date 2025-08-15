@@ -1,13 +1,5 @@
 defmodule GotenbergElixir.HttpClient do
-  @moduledoc """
-  HTTP client facade that delegates to the configured implementation.
-
-  ## Configuration
-
-      config :gotenberg_elixir,
-        http_client: GotenbergElixir.HttpClient.ReqClient
-
-  """
+  @moduledoc false
 
   alias GotenbergElixir.HttpClient.Behaviour
 

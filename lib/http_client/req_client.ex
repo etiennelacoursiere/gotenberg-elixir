@@ -1,7 +1,5 @@
 defmodule GotenbergElixir.HttpClient.ReqClient do
-  @moduledoc """
-  HTTP client implementation using the Req library.
-  """
+  @moduledoc false
 
   @behaviour GotenbergElixir.HttpClient.Behaviour
 

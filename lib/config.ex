@@ -1,14 +1,5 @@
 defmodule GotenbergElixir.Config do
-  @moduledoc """
-  Configuration module for GotenbergElixir.
-
-  ## Configuration Options
-
-      config :gotenberg_elixir,
-        base_url: "http://localhost:3000",
-        http_client: GotenbergElixir.HttpClient.ReqClient
-
-  """
+  @moduledoc false
 
   @doc """
   Gets the base URL for the Gotenberg service.
