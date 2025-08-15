@@ -7,9 +7,9 @@ An elixir client for interacting with Gotenberg
 ## Implemented
 - [x] health check, version
 - [x] Chromium routes
+- [x] LibreOffice routes
 
 ## TODO
-- [ ] LibreOffice routes
 - [ ] PDF routes
 - [ ] Metrics
 - [ ] Webhooks
