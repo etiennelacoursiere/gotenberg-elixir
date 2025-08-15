@@ -1,4 +1,8 @@
 defmodule GotenbergElixir.LibreOffice do
+  @moduledoc """
+  Provides functions to convert documents into PDF using Gotenberg's LibreOffice service.
+  """
+
   alias GotenbergElixir.HttpClient
   alias GotenbergElixir.FormData
 
@@ -61,7 +65,7 @@ defmodule GotenbergElixir.LibreOffice do
 
   def document_into_pdf(files, options \\ []) do
     endpoint = GotenbergElixir.Config.base_url() <> @convert_path
-    files = FormData.reduce_files(files) |> Keyword.to_list()
+    files = files |> FormData.reduce_files() |> Keyword.to_list()
     options = FormData.encode_options(options)
     form_data = files ++ options
 

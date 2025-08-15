@@ -25,7 +25,6 @@ defmodule GotenbergElixir.FormData do
     {GotenbergElixir.Casing.camelize(name), JSON.encode!(value)}
   end
 
-
   defp encode_option({name, value}) when is_map(value) do
     name = GotenbergElixir.Casing.camelize(name)
     value = JSON.encode!(value)

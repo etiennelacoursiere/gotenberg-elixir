@@ -1,4 +1,8 @@
 defmodule GotenbergElixir.Chromium do
+  @moduledoc """
+  Provides functions to convert URLs, HTML, and Markdown files into PDFs or screenshots using Gotenberg's Chromium service.
+  """
+
   alias GotenbergElixir.HttpClient
   alias GotenbergElixir.FormData
 
@@ -158,7 +162,9 @@ defmodule GotenbergElixir.Chromium do
     endpoint = GotenbergElixir.Config.base_url() <> path <> "/url"
     form_data = [url: url] ++ FormData.encode_options(options)
 
-    HttpClient.post(endpoint, {:multipart, form_data}) |> handle_response()
+    endpoint
+    |> HttpClient.post({:multipart, form_data})
+    |> handle_response()
   end
 
   @doc """
@@ -235,7 +241,9 @@ defmodule GotenbergElixir.Chromium do
       |> Keyword.to_list()
       |> Kernel.++(FormData.encode_options(options))
 
-    HttpClient.post(endpoint, {:multipart, form_data}) |> handle_response()
+    endpoint
+    |> HttpClient.post({:multipart, form_data})
+    |> handle_response()
   end
 
   @doc """
@@ -290,10 +298,17 @@ defmodule GotenbergElixir.Chromium do
       |> Keyword.to_list()
       |> Kernel.++(FormData.encode_options(options))
 
-    HttpClient.post(endpoint, {:multipart, form_data}) |> handle_response()
+    endpoint
+    |> HttpClient.post({:multipart, form_data})
+    |> handle_response()
   end
 
   defp handle_response({:ok, %{status: 200}} = response), do: response
-  defp handle_response({:ok, response}), do: {:error, %{reason: :unexpected_status, message: "Unexpected status code: #{response.status}"}}
+
+  defp handle_response({:ok, response}),
+    do:
+      {:error,
+       %{reason: :unexpected_status, message: "Unexpected status code: #{response.status}"}}
+
   defp handle_response({:error, reason}), do: {:error, reason}
 end
