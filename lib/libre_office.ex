@@ -58,7 +58,8 @@ defmodule GotenbergElixir.LibreOffice do
           | metadata_option
           | flatten_option
 
-  @type files :: list({String.t(), binary()})
+  @type file :: {String.t(), binary()}
+  @type files :: list(file())
 
   @doc """
     Converts one or more LibreOffice document into a PDF file.
@@ -71,15 +72,21 @@ defmodule GotenbergElixir.LibreOffice do
     For a list of all available options, refer to the official Gotenberg documentation.
   """
 
-  @spec document_into_pdf(files :: files(), options :: [option()]) ::
+  def convert(file, options \\ [])
+
+  @spec convert(files :: file() | files(), options :: [option()]) ::
           {:ok, HttpClient.response()} | {:error, HttpClient.error()}
 
-  def document_into_pdf(files, options \\ []) do
+  def convert(files, options) when is_list(files) and is_list(options) do
     endpoint = Config.base_url() <> @convert_path
     files = Options.encode_files_options(files)
     options = Options.encode_options(options)
     form_data = files ++ options
 
     HttpClient.post(endpoint, {:multipart, form_data})
+  end
+
+  def convert(file, options) do
+    convert([file], options)
   end
 end
