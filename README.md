@@ -10,19 +10,18 @@
   </a>
 </p>
 
-
+---
 
 > [!WARNING]
-> This is a work in progress and is not yet ready for production use.
+> This is a work in progress use at your own risk.
 
 ## Implemented
 - [x] health check, version
 - [x] Chromium routes
 - [x] LibreOffice routes
+- [X] PDF routes
 
 ## TODO
-- [ ] PDF routes
 - [ ] Metrics
 - [ ] Webhooks
 - [ ] Probably more
-

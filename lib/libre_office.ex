@@ -4,7 +4,8 @@ defmodule GotenbergElixir.LibreOffice do
   """
 
   alias GotenbergElixir.HttpClient
-  alias GotenbergElixir.FormData
+  alias GotenbergElixir.Options
+  alias GotenbergElixir.Config
 
   @convert_path "/forms/libreoffice/convert"
 
@@ -59,26 +60,26 @@ defmodule GotenbergElixir.LibreOffice do
 
   @type files :: list({String.t(), binary()})
 
+  @doc """
+    Converts one or more LibreOffice document into a PDF file.
+
+    ## Parameters
+    - `files`: A list of tuples containing the filename and content of each LibreOffice document. [{"filename.odt", file}]
+    - `options`: Optional parameters passed as a keyword list.
+
+    ## Options
+    For a list of all available options, refer to the official Gotenberg documentation.
+  """
+
   @spec document_into_pdf(files :: files(), options :: [option()]) ::
-          {:ok, GotenbergElixir.HttpClient.response()}
-          | {:error, GotenbergElixir.HttpClient.error()}
+          {:ok, HttpClient.response()} | {:error, HttpClient.error()}
 
   def document_into_pdf(files, options \\ []) do
-    endpoint = GotenbergElixir.Config.base_url() <> @convert_path
-    files = files |> FormData.reduce_files() |> Keyword.to_list()
-    options = FormData.encode_options(options)
+    endpoint = Config.base_url() <> @convert_path
+    files = Options.encode_files_options(files)
+    options = Options.encode_options(options)
     form_data = files ++ options
 
-    case HttpClient.post(endpoint, {:multipart, form_data}) do
-      {:ok, %{status: 200, body: body}} ->
-        {:ok, %{body: body}}
-
-      {:ok, %{status: status, body: body}} ->
-        {:error,
-         %{reason: :unexpected_status, message: "Unexpected status #{status}", body: body}}
-
-      {:error, reason} ->
-        {:error, reason}
-    end
+    HttpClient.post(endpoint, {:multipart, form_data})
   end
 end

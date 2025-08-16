@@ -3,8 +3,9 @@ defmodule GotenbergElixir.Chromium do
   Provides functions to convert URLs, HTML, and Markdown files into PDFs or screenshots using Gotenberg's Chromium service.
   """
 
+  alias GotenbergElixir.Options
   alias GotenbergElixir.HttpClient
-  alias GotenbergElixir.FormData
+  alias GotenbergElixir.Config
 
   @convert_path "/forms/chromium/convert"
   @screenshot_path "/forms/chromium/screenshot"
@@ -25,6 +26,24 @@ defmodule GotenbergElixir.Chromium do
           | {:landscape, boolean()}
           | {:scale, float()}
           | {:native_page_ranges, String.t()}
+
+  @type screenshot_option ::
+          {:width, non_neg_integer()}
+          | {:height, non_neg_integer()}
+          | {:clip, boolean()}
+          | {:format, String.t()}
+          | {:quality, non_neg_integer()}
+          | {:omit_background, boolean()}
+          | {:optimize_for_speed, boolean()}
+          | wait_option()
+          | media_type_option()
+          | cookie_option()
+          | custom_http_header_option()
+          | invalid_http_status_codes_option()
+          | console_exception_option()
+          | performance_mode_option()
+
+  @type files :: list({String.t(), binary()})
 
   @type wait_option ::
           {:wait_delay, String.t()}
@@ -82,48 +101,20 @@ defmodule GotenbergElixir.Chromium do
           | metadata_option()
           | flatten_option()
 
-  @type screenshot_option ::
-          {:width, non_neg_integer()}
-          | {:height, non_neg_integer()}
-          | {:clip, boolean()}
-          | {:format, String.t()}
-          | {:quality, non_neg_integer()}
-          | {:omit_background, boolean()}
-          | {:optimize_for_speed, boolean()}
-          | wait_option()
-          | media_type_option()
-          | cookie_option()
-          | custom_http_header_option()
-          | invalid_http_status_codes_option()
-          | console_exception_option()
-          | performance_mode_option()
-
-  @type files :: list({String.t(), binary()})
-
   @doc """
     Converts a URL into a PDF using Chromium.
 
     ## Parameters
     - `url`: The URL to convert.
-    - `options`: Optional parameters for the conversion.
+    - `options`: Optional parameters passed as a keyword list.
 
     ## Options
-    Options are passed as a keyword list.
-
-    For example:
-
-    GotenbergElixir.Chromium.url_into_pdf("https://example.com", [paper_width: 8.5, paper_height: 11])
-
     For a list of all available options, refer to the official Gotenberg documentation.
-
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
   """
 
   @spec url_into_pdf(String.t(), [pdf_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def url_into_pdf(url, options \\ []) when is_binary(url) and is_list(options) do
     url_into(@convert_path, url, options)
@@ -134,37 +125,26 @@ defmodule GotenbergElixir.Chromium do
 
     ## Parameters
     - `url`: The URL to convert.
-    - `options`: Optional parameters for the conversion.
+    - `options`: Optional parameters passed as a keyword list.
 
     ## Options
-    Options are passed as a keyword list.
-
-    For example:
-
-    GotenbergElixir.Chromium.url_into_screenshot("https://example.com", [width: 1280, height: 720])
-
     For a list of all available options, refer to the official Gotenberg documentation.
-
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
   """
 
   @spec url_into_screenshot(String.t(), [screenshot_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def url_into_screenshot(url, options \\ []) when is_binary(url) and is_list(options) do
     url_into(@screenshot_path, url, options)
   end
 
   defp url_into(path, url, options) do
-    endpoint = GotenbergElixir.Config.base_url() <> path <> "/url"
-    form_data = [url: url] ++ FormData.encode_options(options)
+    endpoint = Config.base_url() <> path <> "/url"
+    options = [url: url] ++ options
+    form_data = Options.encode_options(options)
 
-    endpoint
-    |> HttpClient.post({:multipart, form_data})
-    |> handle_response()
+    HttpClient.post(endpoint, {:multipart, form_data})
   end
 
   @doc """
@@ -173,26 +153,15 @@ defmodule GotenbergElixir.Chromium do
     ## Parameters
     - `html`: The HTML content as a binary string.
     - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, content}
-    - `options`: Optional parameters for the conversion.
+    - `options`: Optional parameters passed as a keyword list.
 
     ## Options
-    Options are passed as a keyword list.
-
-    For example:
-    GotenbergElixir.Chromium.html_file_into_pdf(
-      "<html><body>Hello, World!</body></html>",
-      [{"style.css", "body { color: red; }"}],
-      [landscape: true]
-    )
-
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
+    For a list of all available options, refer to the official Gotenberg documentation.
   """
 
   @spec html_file_into_pdf(binary, files(), [pdf_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def html_file_into_pdf(html, additional_files \\ [], options \\ [])
       when is_binary(html) and is_list(additional_files) and is_list(options) do
@@ -205,26 +174,15 @@ defmodule GotenbergElixir.Chromium do
     ## Parameters
     - `html`: The HTML content as a binary string.
     - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, content}
-    - `options`: Optional parameters for the conversion.
+    - `options`: Optional parameters passed as a keyword list.
 
     ## Options
-    Options are passed as a keyword list.
-
-    For example:
-    GotenbergElixir.Chromium.html_file_into_screenshot(
-      "<html><body>Hello, World!</body></html>",
-      [{"style.css", "body { color: red; }"}],
-      [width: 1280, height: 720]
-    )
-
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
+    For a list of all available options, refer to the official Gotenberg documentation.
   """
 
   @spec html_file_into_screenshot(binary, files(), [screenshot_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def html_file_into_screenshot(html, additional_files \\ [], options \\ [])
       when is_binary(html) and is_list(additional_files) and is_list(options) do
@@ -233,17 +191,12 @@ defmodule GotenbergElixir.Chromium do
 
   defp html_file_into(path, html, additional_files, options)
        when is_binary(html) and is_list(additional_files) and is_list(options) do
-    endpoint = GotenbergElixir.Config.base_url() <> path <> "/html"
+    endpoint = Config.base_url() <> path <> "/html"
 
-    form_data =
-      [index: {html, filename: "index.html"}]
-      |> Keyword.merge(FormData.reduce_files(additional_files))
-      |> Keyword.to_list()
-      |> Kernel.++(FormData.encode_options(options))
+    files = [{"index.html", html}] ++ additional_files
+    form_data = Options.encode_files_options(files) ++ Options.encode_options(options)
 
-    endpoint
-    |> HttpClient.post({:multipart, form_data})
-    |> handle_response()
+    HttpClient.post(endpoint, {:multipart, form_data})
   end
 
   @doc """
@@ -252,15 +205,15 @@ defmodule GotenbergElixir.Chromium do
     ## Parameters
     - `index_html`: The HTML template content that wraps the markdown (uses `{{ toHTML "filename.md" }}` syntax).
     - `markdown_files`: A list of tuples containing the filename and content of each markdown file. [{"filename.md", file}]
+    - `options`: Optional parameters passed as a keyword list.
 
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
+    ## Options
+    For a list of all available options, refer to the official Gotenberg documentation.
   """
 
   @spec markdown_files_into_pdf(String.t(), files(), [pdf_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def markdown_files_into_pdf(index_html, markdown_files, options \\ [])
       when is_binary(index_html) and is_list(markdown_files) and is_list(options) do
@@ -273,15 +226,15 @@ defmodule GotenbergElixir.Chromium do
     ## Parameters
     - `index_html`: The HTML template content that wraps the markdown (uses `{{ toHTML "filename.md" }}` syntax).
     - `markdown_files`: A list of tuples containing the filename and content of each markdown file. [{"filename.md", file}]
+    - `options`: Optional parameters passed as a keyword list.
 
-    ## Returns
-    - `{:ok, response}` if the conversion is successful.
-    - `{:error, error}` if the conversion fails.
+    ## Options
+    For a list of all available options, refer to the official Gotenberg documentation.
   """
 
   @spec markdown_files_into_screenshot(String.t(), files(), [screenshot_option()]) ::
-          {:ok, GotenbergElixir.HttpClient.Behaviour.response()}
-          | {:error, GotenbergElixir.HttpClient.Behaviour.error()}
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def markdown_files_into_screenshot(index_html, markdown_files, options \\ [])
       when is_binary(index_html) and is_list(markdown_files) and is_list(options) do
@@ -290,25 +243,10 @@ defmodule GotenbergElixir.Chromium do
 
   defp markdown_files_into(path, index_html, markdown_files, options)
        when is_binary(index_html) and is_list(markdown_files) and is_list(options) do
-    endpoint = GotenbergElixir.Config.base_url() <> path <> "/markdown"
+    endpoint = Config.base_url() <> path <> "/markdown"
+    files = [{"index.html", index_html}] ++ markdown_files
+    form_data = Options.encode_files_options(files) ++ Options.encode_options(options)
 
-    form_data =
-      [index: {index_html, filename: "index.html"}]
-      |> Keyword.merge(FormData.reduce_files(markdown_files))
-      |> Keyword.to_list()
-      |> Kernel.++(FormData.encode_options(options))
-
-    endpoint
-    |> HttpClient.post({:multipart, form_data})
-    |> handle_response()
+    HttpClient.post(endpoint, {:multipart, form_data})
   end
-
-  defp handle_response({:ok, %{status: 200}} = response), do: response
-
-  defp handle_response({:ok, response}),
-    do:
-      {:error,
-       %{reason: :unexpected_status, message: "Unexpected status code: #{response.status}"}}
-
-  defp handle_response({:error, reason}), do: {:error, reason}
 end
