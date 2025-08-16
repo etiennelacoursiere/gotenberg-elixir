@@ -1,4 +1,4 @@
-defmodule GotenbergElixir.PDF do
+defmodule GotenbergElixir.Pdf do
   @moduledoc """
   Provides functionality for PDF-related operations
   """

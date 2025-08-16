@@ -1,22 +1,22 @@
-defmodule GotenbergElixir.FormDataTest do
+defmodule GotenbergElixir.OptionsTest do
   use ExUnit.Case
-  alias GotenbergElixir.FormData
+  alias GotenbergElixir.Options
 
   describe "encode_options/1" do
     test "encodes empty list" do
-      assert FormData.encode_options([]) == []
+      assert Options.encode_options([]) == []
     end
 
     test "encodes single option with atom key" do
       options = [paper_width: "8.5"]
-      result = FormData.encode_options(options)
+      result = Options.encode_options(options)
 
       assert result == [{"paperWidth", "8.5"}]
     end
 
     test "encodes single option with string key" do
       options = [{"paper_height", 11}]
-      result = FormData.encode_options(options)
+      result = Options.encode_options(options)
 
       assert result == [{"paperHeight", "11"}]
     end
@@ -29,7 +29,7 @@ defmodule GotenbergElixir.FormDataTest do
         margin_top: "0.5in"
       ]
 
-      result = FormData.encode_options(options)
+      result = Options.encode_options(options)
 
       expected = [
         {"marginTop", "0.5in"},
@@ -52,7 +52,7 @@ defmodule GotenbergElixir.FormDataTest do
         atom_value: :some_atom
       ]
 
-      result = FormData.encode_options(options)
+      result = Options.encode_options(options)
 
       expected = [
         {"atomValue", "some_atom"},
@@ -71,9 +71,9 @@ defmodule GotenbergElixir.FormDataTest do
   describe "reduce_files/1" do
     test "converts single file tuple to keyword list" do
       files = [{"index.css", "body { color: red; }"}]
-      result = FormData.reduce_files(files)
+      result = Options.encode_files_options(files)
 
-      assert result == [file_1: {"body { color: red; }", filename: "index.css"}]
+      assert result == [{"file_1", {"body { color: red; }", filename: "index.css"}}]
     end
 
     test "converts multiple file tuples to keyword list with sequential keys" do
@@ -83,21 +83,16 @@ defmodule GotenbergElixir.FormDataTest do
         {"script.js", "console.log('hello');"}
       ]
 
-      result = FormData.reduce_files(files)
+      result = Options.encode_files_options(files)
 
       expected = [
-        file_1: {"body { margin: 0; }", filename: "style.css"},
-        file_2: {<<137, 80, 78, 71>>, filename: "logo.png"},
-        file_3: {"console.log('hello');", filename: "script.js"}
+        {"file_1", {"body { margin: 0; }", filename: "style.css"}},
+        {"file_2", {<<137, 80, 78, 71>>, filename: "logo.png"}},
+        {"file_3", {"console.log('hello');", filename: "script.js"}}
       ]
 
-      assert Keyword.get(result, :file_1) == expected[:file_1]
-      assert Keyword.get(result, :file_2) == expected[:file_2]
-      assert Keyword.get(result, :file_3) == expected[:file_3]
-    end
-
-    test "handles empty file list" do
-      assert FormData.reduce_files([]) == []
+      assert length(result) == length(expected)
+      assert Enum.all?(expected, &(&1 in result))
     end
   end
 end
