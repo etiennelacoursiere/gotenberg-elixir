@@ -1,6 +1,8 @@
 defmodule GotenbergElixir.PDF do
   @moduledoc """
+  Provides functionality for PDF-related operations
   """
+
   alias GotenbergElixir.HttpClient
   alias GotenbergElixir.Options
   alias GotenbergElixir.Config

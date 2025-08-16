@@ -1,4 +1,6 @@
 defmodule GotenbergElixir.Options do
+  @moduledoc false
+
   @doc """
   Encodes a list of options to the format required by Gotenberg.
   """

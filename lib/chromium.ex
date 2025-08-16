@@ -1,6 +1,6 @@
 defmodule GotenbergElixir.Chromium do
   @moduledoc """
-  Provides functions to convert URLs, HTML, and Markdown files into PDFs or screenshots using Gotenberg's Chromium service.
+  Provides functions to convert URLs, HTML, and Markdown files into PDFs or screenshots.
   """
 
   alias GotenbergElixir.Options
