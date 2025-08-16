@@ -29,7 +29,7 @@ defmodule GotenbergElixir.PDF do
     Transforms one or more PDF files into the requested PDF/A format and/or PDF/UA.
 
     ## Parameters
-    - `files`: A list of tuples containing the file name and its binary content.
+    - `files`: A list of pdf files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -69,7 +69,7 @@ defmodule GotenbergElixir.PDF do
     Writes metadata for one or more PDF files.
 
     ## Parameters
-    - `files`: A list of file paths or URLs.
+    - `files`: A list of pdf files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -93,7 +93,8 @@ defmodule GotenbergElixir.PDF do
     Merges one or more PDF files.
 
     ## Parameters
-    - `files`: A list of file paths or URLs.
+
+    - `files`: A list of pdf files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -116,7 +117,8 @@ defmodule GotenbergElixir.PDF do
     Split one or more PDF files.
 
     ## Parameters
-    - `files`: A list of file paths or URLs.
+
+    - `files`: A list of pdf files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -135,6 +137,18 @@ defmodule GotenbergElixir.PDF do
 
     HttpClient.post(endpoint, {:multipart, form_data})
   end
+
+  @doc """
+    Flatten one or more PDF files.
+
+    ## Parameters
+    - `files`: A list of pdf files as {filename, file}
+
+  """
+
+  @spec flatten_pdf(files :: files()) ::
+          {:ok, HttpClient.Behaviour.response()}
+          | {:error, HttpClient.Behaviour.error()}
 
   def flatten_pdf(files) do
     endpoint = Config.base_url() <> @pdf_path <> "/flatten"

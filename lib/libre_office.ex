@@ -65,28 +65,22 @@ defmodule GotenbergElixir.LibreOffice do
     Converts one or more LibreOffice document into a PDF file.
 
     ## Parameters
-    - `files`: A list of tuples containing the filename and content of each LibreOffice document. [{"filename.odt", file}]
+    - `files`: A list of files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
     For a list of all available options, refer to the official Gotenberg documentation.
   """
 
-  def convert(file, options \\ [])
-
-  @spec convert(files :: file() | files(), options :: [option()]) ::
+  @spec convert(files :: files(), options :: [option()]) ::
           {:ok, HttpClient.response()} | {:error, HttpClient.error()}
 
-  def convert(files, options) when is_list(files) and is_list(options) do
+  def convert(files, options \\ []) when is_list(files) and is_list(options) do
     endpoint = Config.base_url() <> @convert_path
     files = Options.encode_files_options(files)
     options = Options.encode_options(options)
     form_data = files ++ options
 
     HttpClient.post(endpoint, {:multipart, form_data})
-  end
-
-  def convert(file, options) do
-    convert([file], options)
   end
 end

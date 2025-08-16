@@ -25,3 +25,47 @@
 - [ ] Metrics
 - [ ] Webhooks
 - [ ] Probably more
+
+## Quick examples
+Convert a target URL to PDF
+```elixir
+{:ok, %{body: pdf}} = GotenbergElixir.Chromium.url_into_pdf("https://example.com")
+File.write!("my_pdf.pdf", pdf)
+```
+
+Convert html into PDF
+```elixir
+html = "<html><body><h1>Hello World</h1></body></html>"
+{:ok, %{body: pdf}} = GotenbergElixir.Chromium.html_file_into_pdf(html)
+File.write!("my_pdf.pdf", pdf)
+
+# Add header, footer, images, etc. that you can reference in your index.html
+{:ok, %{body: pdf}} =
+  GotenbergElixir.Chromium.html_file_into_pdf(
+    html_file,
+    [
+      {"style.css", css_file},
+      {"header.html", header_file},
+      {"footer.html", footer_file}
+    ]
+  )
+
+File.write!("my_pdf.pdf", pdf)
+```
+
+Convert Office documents to PDF
+```elixir
+{:ok, %{body: pdf}} = GotenbergElixir.LibreOffice.convert([{"my_file.docs", docx_file}])
+File.write!("my_pdf.pdf", pdf)
+
+# You can convert multiple files at once
+{:ok, %{body: pdf}} = GotenbergElixir.LibreOffice.convert([
+  {"my_file.docs", docx_file},
+  {"my_file.xls", xls_file},
+  {"my_file.ppt", ppt_file}
+])
+
+Enum.each(body, fn {filename, content} ->
+  File.write!(filename, content)
+end)
+```

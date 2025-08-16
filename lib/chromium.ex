@@ -152,7 +152,7 @@ defmodule GotenbergElixir.Chromium do
 
     ## Parameters
     - `html`: The HTML content as a binary string.
-    - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, content}
+    - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -173,7 +173,7 @@ defmodule GotenbergElixir.Chromium do
 
     ## Parameters
     - `html`: The HTML content as a binary string.
-    - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, content}
+    - `additional_files`: A list of additional files (images, CSS, fonts) as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -204,7 +204,7 @@ defmodule GotenbergElixir.Chromium do
 
     ## Parameters
     - `index_html`: The HTML template content that wraps the markdown (uses `{{ toHTML "filename.md" }}` syntax).
-    - `markdown_files`: A list of tuples containing the filename and content of each markdown file. [{"filename.md", file}]
+    - `markdown_files`: A list of markdown files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
@@ -225,7 +225,7 @@ defmodule GotenbergElixir.Chromium do
 
     ## Parameters
     - `index_html`: The HTML template content that wraps the markdown (uses `{{ toHTML "filename.md" }}` syntax).
-    - `markdown_files`: A list of tuples containing the filename and content of each markdown file. [{"filename.md", file}]
+    - `markdown_files`: A list of markdown files as {filename, file}
     - `options`: Optional parameters passed as a keyword list.
 
     ## Options
