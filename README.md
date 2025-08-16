@@ -55,12 +55,12 @@ File.write!("my_pdf.pdf", pdf)
 
 Convert Office documents to PDF
 ```elixir
-{:ok, %{body: pdf}} = GotenbergElixir.LibreOffice.convert([{"my_file.docs", docx_file}])
+{:ok, %{body: pdf}} = GotenbergElixir.LibreOffice.convert([{"my_file.docx", docx_file}])
 File.write!("my_pdf.pdf", pdf)
 
 # You can convert multiple files at once
 {:ok, %{body: pdf}} = GotenbergElixir.LibreOffice.convert([
-  {"my_file.docs", docx_file},
+  {"my_file.docx", docx_file},
   {"my_file.xls", xls_file},
   {"my_file.ppt", ppt_file}
 ])
