@@ -10,7 +10,8 @@ defmodule GotenbergElixir.MixProject do
       deps: deps(),
       name: "Gotenberg Elixir",
       source_url: "https://github.com/etiennelacoursiere/gotenberg-elixir",
-      docs: &docs/0
+      docs: &docs/0,
+      elixirc_paths: elixirc_paths(Mix.env())
     ]
   end
 
@@ -21,6 +22,9 @@ defmodule GotenbergElixir.MixProject do
       logo: "assets/gotenberg-elixir.png"
     ]
   end
+
+  defp elixirc_paths(:test), do: ["test/support", "lib"]
+  defp elixirc_paths(_), do: ["lib"]
 
   # Run "mix help compile.app" to learn about applications.
   def application do
@@ -34,7 +38,8 @@ defmodule GotenbergElixir.MixProject do
     [
       {:req, "~> 0.5.0"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:ex_doc, "~> 0.34", only: :dev, runtime: false, warn_if_outdated: true}
+      {:mox, "~> 1.0", only: :test},
+      {:ex_doc, "~> 0.38.3", only: :dev, runtime: false, warn_if_outdated: true}
     ]
   end
 end
