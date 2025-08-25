@@ -1,11 +1,11 @@
-name: CI
+name: ci
 on:
   pull_request:
   push:
     branches:
       - main
 jobs:
-  test:
+  ci:
     runs-on: ubuntu-24.04
     env:
       MIX_ENV: test
@@ -21,8 +21,7 @@ jobs:
               otp: "28.0"
             lint: lint
     steps:
-      - uses: actions/checkout@v4
-
+      - uses: actions/checkout@v5
       - uses: erlef/setup-beam@v1
         with:
           otp-version: ${{ matrix.pair.otp }}
@@ -30,11 +29,15 @@ jobs:
 
       - uses: actions/cache@v4
         with:
-          path: deps
-          key: mix-otp-${{ matrix.pair.otp }}-deps-${{ hashFiles('**/mix.lock') }}
+          path: |
+            deps
+            _build
+          key: ${{ runner.os }}-mix-${{matrix.pair.elixir}}-${{matrix.pair.otp}}-${{ hashFiles('**/mix.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-mix-${{matrix.pair.elixir}}-${{matrix.pair.otp}}-
 
       - name: Run mix deps.get
-        run: mix deps.get --only test
+        run: mix deps.get
 
       - name: Run mix format
         run: mix format --check-formatted

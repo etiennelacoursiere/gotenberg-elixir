@@ -11,12 +11,13 @@ defmodule GotenbergElixir.Options do
 
   defp encode_option({:cookies, value}) when is_list(value) do
     value =
-      Enum.map(value, fn cookie ->
+      value
+      |> Enum.map(fn cookie ->
         cookie
         |> Enum.map(fn {k, v} -> {GotenbergElixir.Casing.camelize(k), v} end)
         |> Enum.into(%{})
-        |> JSON.encode!()
       end)
+      |> JSON.encode!()
 
     {"cookies", value}
   end

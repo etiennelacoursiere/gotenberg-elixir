@@ -27,3 +27,7 @@ gotenberg_elixir-*.tar
 .nix-*
 
 .DS_Store
+
+.claude
+.CLAUDE.md
+/prompts/
