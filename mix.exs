@@ -1,17 +1,31 @@
 defmodule GotenbergElixir.MixProject do
   use Mix.Project
 
+  @github "https://github.com/etiennelacoursiere/gotenberg-elixir"
+  @version "0.1.0"
+
   def project do
     [
       app: :gotenberg_elixir,
-      version: "0.1.0",
+      version: @version,
       elixir: "~> 1.18",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       name: "Gotenberg Elixir",
-      source_url: "https://github.com/etiennelacoursiere/gotenberg-elixir",
+      source_url: @github,
       docs: &docs/0,
+      package: package(),
       elixirc_paths: elixirc_paths(Mix.env())
+    ]
+  end
+
+  def package do
+    [
+      licenses: ["MIT"],
+      links: %{
+        "GitHub" => @github
+      },
+      description: "An elixir client for interacting with Gotenberg"
     ]
   end
 
