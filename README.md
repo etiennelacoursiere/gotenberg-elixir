@@ -8,6 +8,9 @@
   <a href="https://github.com/etiennelacoursiere/gotenberg-elixir/actions">
     <img alt="CI Status" src="https://github.com/etiennelacoursiere/gotenberg-elixir/actions/workflows/ci.yml/badge.svg">
   </a>
+  <a href="https://hex.pm/packages/gotenberg_elixir">
+    <img alt="Hex" src="https://img.shields.io/hexpm/v/gotenberg_elixir.svg">
+  </a>
 </p>
 
 ---
