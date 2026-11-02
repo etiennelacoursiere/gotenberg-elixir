@@ -50,7 +50,7 @@ defmodule GotenbergElixir.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:req, "~> 0.5.0 or ~> 0.6.0 or ~> 0.7.0"},
+      {:req, "~> 0.5.0 or ~> 0.6.0 or ~> 0.7.2"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
       {:mox, "~> 1.0", only: :test},
       {:ex_doc, "~> 0.38.3", only: :dev, runtime: false, warn_if_outdated: true}
