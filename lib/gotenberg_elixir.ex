@@ -8,7 +8,8 @@ defmodule GotenbergElixir do
   @doc """
   Checks the health of the Gotenberg service.
   """
-  @spec health() :: {:ok, HttpClient.response()} | {:error, HttpClient.error()}
+  @spec health() ::
+          {:ok, HttpClient.Behaviour.response()} | {:error, HttpClient.Behaviour.error()}
   def health do
     url = GotenbergElixir.Config.base_url() <> "/health"
     HttpClient.get(url)
@@ -17,7 +18,8 @@ defmodule GotenbergElixir do
   @doc """
   Gets version information from the Gotenberg service.
   """
-  @spec version() :: {:ok, HttpClient.response()} | {:error, HttpClient.error()}
+  @spec version() ::
+          {:ok, HttpClient.Behaviour.response()} | {:error, HttpClient.Behaviour.error()}
   def version do
     url =
       GotenbergElixir.Config.base_url() <> "/version"

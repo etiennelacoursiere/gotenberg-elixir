@@ -22,9 +22,11 @@ gotenberg_elixir-*.tar
 # Temporary files, for example, from tests.
 /tmp/
 
-/lib/test/*
+/dev/*
 
 .nix-*
+.direnv/
+.envrc
 
 .DS_Store
 

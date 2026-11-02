@@ -73,7 +73,7 @@ defmodule GotenbergElixir.LibreOffice do
   """
 
   @spec convert(files :: files(), options :: [option()]) ::
-          {:ok, HttpClient.response()} | {:error, HttpClient.error()}
+          {:ok, HttpClient.Behaviour.response()} | {:error, HttpClient.Behaviour.error()}
 
   def convert(files, options \\ []) when is_list(files) and is_list(options) do
     endpoint = Config.base_url() <> @convert_path
