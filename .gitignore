@@ -25,6 +25,7 @@ gotenberg_elixir-*.tar
 /lib/test/*
 
 .nix-*
+.direnv/
 
 .DS_Store
 
