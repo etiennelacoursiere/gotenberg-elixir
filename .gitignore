@@ -26,6 +26,7 @@ gotenberg_elixir-*.tar
 
 .nix-*
 .direnv/
+.envrc
 
 .DS_Store
 
