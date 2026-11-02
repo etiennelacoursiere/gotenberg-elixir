@@ -2,7 +2,7 @@ defmodule GotenbergElixir.MixProject do
   use Mix.Project
 
   @github "https://github.com/etiennelacoursiere/gotenberg-elixir"
-  @version "0.1.0"
+  @version "0.1.1"
 
   def project do
     [
